@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Trabalhe na V4 Mendes — Vagas abertas</title>
+<meta name="description" content="Vagas abertas na V4 Company — unidade Mendes, Porto Alegre/RS.">
+<meta name="theme-color" content="#0d0d0d">
+<meta property="og:title" content="Trabalhe na V4 Mendes">
+<meta property="og:description" content="Vagas abertas na unidade Mendes, em Porto Alegre.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23E50914' fill-rule='evenodd' d='M22.3633 18.0115H14.485C17.1115 15.3896 19.738 12.7677 22.3633 10.1457V18.0115ZM32 23.2948V28.2782C32 29.2645 31.604 30.2126 30.8991 30.91C30.2191 31.584 29.2801 32 28.2427 32H3.75731C1.68251 32 0 30.3335 0 28.277V3.72303C0 1.66647 1.68251 0 3.75731 0C3.73738 4.72291 3.71745 9.44582 3.69628 14.17C4.58548 15.0304 5.47344 15.8908 6.36264 16.7511C10.9892 12.1677 15.6146 7.58554 20.2411 3.00212H15.5747C12.7664 5.78452 9.95805 8.56567 7.15096 11.3481C7.13104 7.56579 7.11111 3.78351 7.08994 0H28.2414C30.3162 0 31.9988 1.66647 31.9988 3.72303V17.9522H27.45C27.4413 13.0332 27.4313 8.11428 27.4213 3.18235H26.8466H22.362C17.3357 8.08178 7.28173 17.8819 7.21074 17.9522C7.19081 17.972 7.17089 17.9917 7.14972 18.0127V23.0566C7.13975 23.1233 7.16217 23.1899 7.21074 23.2368C7.25931 23.2837 7.32532 23.3059 7.39257 23.2973H22.362V28.1609H27.3921V23.2973H31.9975L32 23.2948Z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#E50914; --red-500:#ff4143; --red-800:#a50e10;
+  --black:#0d0d0d; --ink:#171717; --ink-2:#1f1f1f; --line:#2a2a2a; --line-2:#3a3a3a;
+  --white:#fff; --mute:#a3a3a3; --mute-2:#737373;
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --ease:cubic-bezier(.22,1,.36,1);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--black);color:var(--white);font-family:var(--font);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,input,textarea,select{font:inherit;color:inherit}
+::selection{background:var(--red)}
+a{color:var(--red-500)}
+
+.bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.bg::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:56px 56px;opacity:.35;mask-image:radial-gradient(ellipse at 50% 0%,#000 10%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 50% 0%,#000 10%,transparent 70%)}
+.glow{position:absolute;width:70vmax;height:70vmax;border-radius:50%;background:radial-gradient(circle,rgba(229,9,20,.28),transparent 60%);filter:blur(20px);top:-42vmax;right:-25vmax}
+.glow.g2{top:auto;bottom:-52vmax;right:auto;left:-30vmax;background:radial-gradient(circle,rgba(229,9,20,.14),transparent 60%)}
+
+.wrap{position:relative;z-index:1;max-width:940px;margin:0 auto;padding:0 20px}
+
+header{padding:38px 0 0}
+.brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:-.01em}
+.brand svg{width:34px;height:34px;flex:none}
+.brand small{display:block;font-weight:500;color:var(--mute);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+
+.hero{padding:56px 0 16px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--red-500);margin-bottom:18px}
+h1{font-size:clamp(34px,6.2vw,58px);line-height:1.03;letter-spacing:-.035em;font-weight:900;margin:0 0 18px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--red)}
+.lead{color:#d4d4d4;font-size:17px;max-width:62ch;margin:0}
+
+h2{font-size:clamp(22px,3.4vw,30px);line-height:1.15;letter-spacing:-.025em;font-weight:800;margin:0 0 8px;text-wrap:balance}
+h3{font-size:14px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:26px 0 10px}
+
+/* lista de vagas */
+.vagas{display:grid;gap:16px;padding:30px 0 10px}
+.vaga{border:1px solid var(--line);border-radius:16px;background:linear-gradient(var(--ink),#141414);overflow:hidden;transition:border-color .25s,transform .25s var(--ease)}
+.vaga:hover{border-color:var(--line-2)}
+.vaga-topo{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:24px;cursor:pointer;width:100%;background:none;border:0;text-align:left}
+.vaga-topo:focus-visible{outline:2px solid var(--red-500);outline-offset:-2px}
+.vaga-topo h2{margin:0 0 6px}
+.chamada{color:#c4c4c4;font-size:15px;margin:0 0 14px;max-width:56ch}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{font-size:12px;font-weight:600;letter-spacing:.02em;padding:5px 11px;border-radius:999px;border:1px solid var(--line-2);color:#d4d4d4;background:#0f0f0f}
+.tag.destaque{border-color:var(--red-800);color:var(--red-500)}
+.chev{flex:none;width:34px;height:34px;display:grid;place-items:center;border-radius:50%;border:1px solid var(--line-2);color:var(--mute);transition:transform .3s var(--ease),color .2s,border-color .2s}
+.vaga.open .chev{transform:rotate(180deg);color:var(--white);border-color:var(--red)}
+.vaga-corpo{display:none;padding:0 24px 26px;border-top:1px solid var(--line);margin-top:-2px}
+.vaga.open .vaga-corpo{display:block;animation:rise .45s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.vaga-corpo p{color:#d4d4d4;margin:18px 0 0;max-width:68ch}
+.vaga-corpo ul{margin:0;padding-left:20px;color:#d4d4d4;max-width:68ch}
+.vaga-corpo li{margin:7px 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:52px;padding:0 26px;border:0;border-radius:12px;background:var(--red);color:var(--white);font-weight:700;letter-spacing:-.01em;cursor:pointer;transition:background .2s,transform .15s}
+.btn:hover{background:var(--red-500)}
+.btn:active{transform:translateY(1px)}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn.ghost{background:none;border:1px solid var(--line-2);color:var(--white)}
+.btn.ghost:hover{border-color:var(--white);background:#ffffff0d}
+.acoes{margin-top:28px;display:flex;flex-wrap:wrap;gap:12px}
+
+/* formulário */
+dialog{border:0;padding:0;background:none;max-width:none;max-height:none;width:100%;height:100%;margin:0}
+dialog::backdrop{background:#000000d9;backdrop-filter:blur(6px)}
+.modal{min-height:100%;display:flex;align-items:flex-start;justify-content:center;padding:24px 20px 60px}
+.card{width:100%;max-width:620px;background:var(--ink);border:1px solid var(--line-2);border-radius:18px;padding:30px;position:relative;animation:rise .4s var(--ease) both}
+.fechar{position:absolute;top:16px;right:16px;width:36px;height:36px;border-radius:50%;border:1px solid var(--line-2);background:#0f0f0f;color:var(--mute);cursor:pointer;display:grid;place-items:center;font-size:18px;line-height:1}
+.fechar:hover{color:var(--white);border-color:var(--white)}
+.card h2{margin:0 4px 6px 0;padding-right:44px}
+.card .para{color:var(--mute);font-size:14px;margin:0 0 4px}
+.field{margin-top:20px}
+.label{display:block;font-size:13px;font-weight:600;color:var(--mute);margin-bottom:8px}
+.label .opt{color:var(--mute-2);font-weight:500}
+input[type=text],input[type=email],input[type=tel],input[type=url],textarea,select{width:100%;background:#0f0f0f;border:1px solid var(--line-2);border-radius:11px;padding:14px 15px;color:var(--white);transition:border-color .2s,box-shadow .2s}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--red);box-shadow:0 0 0 3px #e5091429}
+input::placeholder,textarea::placeholder{color:#5a5a5a}
+textarea{min-height:110px;resize:vertical}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 15px center;padding-right:42px}
+.erro{color:var(--red-500);font-size:13px;margin-top:7px;display:none}
+.invalido input,.invalido textarea,.invalido select,.invalido .drop{border-color:var(--red)}
+.invalido .erro{display:block}
+
+/* upload do currículo */
+.drop{position:relative;display:flex;align-items:center;gap:14px;background:#0f0f0f;border:1px dashed var(--line-2);border-radius:11px;padding:16px 15px;cursor:pointer;transition:border-color .2s,background .2s}
+.drop:hover,.drop.hover{border-color:var(--red);background:#140f10}
+.drop input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.drop .ico{flex:none;width:38px;height:38px;border-radius:10px;background:#1a1a1a;border:1px solid var(--line-2);display:grid;place-items:center;color:var(--mute)}
+.drop .txt{min-width:0}
+.drop .t1{display:block;font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.drop .t2{display:block;font-size:12px;color:var(--mute-2);margin-top:2px}
+.drop.cheio{border-style:solid;border-color:#1f5131;background:#0e1a12}
+.drop.cheio .ico{color:#4ade80;border-color:#1f5131}
+.drop .limpar{position:relative;z-index:1;flex:none;margin-left:auto;width:30px;height:30px;border-radius:50%;border:1px solid var(--line-2);background:#0f0f0f;color:var(--mute);cursor:pointer;display:none;place-items:center;font-size:16px;line-height:1}
+.drop.cheio .limpar{display:grid}
+.drop .limpar:hover{color:var(--white);border-color:var(--white)}
+.aviso{margin-top:22px;padding:13px 15px;border-radius:11px;background:#0f0f0f;border:1px solid var(--line);color:var(--mute);font-size:13px}
+.enviar{margin-top:24px;width:100%}
+.ok{text-align:center;padding:16px 0}
+.ok .mark{width:62px;height:62px;margin:0 auto 20px;border-radius:50%;background:#10281a;border:1px solid #1f5131;display:grid;place-items:center}
+.ok h2{padding:0;margin-bottom:10px}
+.ok p{color:#d4d4d4;margin:0 0 24px}
+
+footer{padding:60px 0 50px;color:var(--mute-2);font-size:13px;border-top:1px solid var(--line);margin-top:54px}
+footer a{color:var(--mute)}
+
+.vazio{border:1px dashed var(--line-2);border-radius:16px;padding:44px 24px;text-align:center;color:var(--mute)}
+
+@media (max-width:620px){
+  .vaga-topo{padding:20px;gap:12px}
+  .vaga-corpo{padding:0 20px 22px}
+  .card{padding:24px 20px}
+  .acoes .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="bg"><div class="glow"></div><div class="glow g2"></div></div>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#E50914" fill-rule="evenodd" d="M22.3633 18.0115H14.485C17.1115 15.3896 19.738 12.7677 22.3633 10.1457V18.0115ZM32 23.2948V28.2782C32 29.2645 31.604 30.2126 30.8991 30.91C30.2191 31.584 29.2801 32 28.2427 32H3.75731C1.68251 32 0 30.3335 0 28.277V3.72303C0 1.66647 1.68251 0 3.75731 0C3.73738 4.72291 3.71745 9.44582 3.69628 14.17C4.58548 15.0304 5.47344 15.8908 6.36264 16.7511C10.9892 12.1677 15.6146 7.58554 20.2411 3.00212H15.5747C12.7664 5.78452 9.95805 8.56567 7.15096 11.3481C7.13104 7.56579 7.11111 3.78351 7.08994 0H28.2414C30.3162 0 31.9988 1.66647 31.9988 3.72303V17.9522H27.45C27.4413 13.0332 27.4313 8.11428 27.4213 3.18235H26.8466H22.362C17.3357 8.08178 7.28173 17.8819 7.21074 17.9522C7.19081 17.972 7.17089 17.9917 7.14972 18.0127V23.0566C7.13975 23.1233 7.16217 23.1899 7.21074 23.2368C7.25931 23.2837 7.32532 23.3059 7.39257 23.2973H22.362V28.1609H27.3921V23.2973H31.9975L32 23.2948Z"/></svg>
+      <span>V4 Mendes<small>Porto Alegre · RS</small></span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <span class="eyebrow">Trabalhe com a gente</span>
+    <h1>Vagas abertas na <em>V4 Mendes</em></h1>
+    <p class="lead">Somos a unidade Mendes da V4 Company, em Porto Alegre. Abaixo estão as posições abertas agora. Abra a vaga, leia o que o dia a dia pede e se candidate pelo formulário — leva uns 2 minutos.</p>
+  </section>
+
+  <main id="lista" class="vagas"></main>
+
+  <footer>
+    V4 Company — unidade Mendes · Rua Hilário Ribeiro 214, Porto Alegre/RS<br>
+    Dúvida sobre uma vaga? Fale com a gente pelo <a href="https://wa.me/5551984347714" target="_blank" rel="noopener">WhatsApp</a>.
+  </footer>
+</div>
+
+<dialog id="dlg">
+  <div class="modal">
+    <div class="card" id="card"></div>
+  </div>
+</dialog>
+
+<script src="vagas.js"></script>
+<script>
+const CONFIG = {
+  // Cole aqui a URL /exec do Apps Script publicado (ver README.md)
+  endpoint: "COLE_A_URL_DO_APPS_SCRIPT_AQUI",
+};
+
+// Apps Script aceita ~50 MB por requisição, mas base64 infla ~33% e a cota do Drive é do Leonardo.
+// 8 MB cobre qualquer currículo real e derruba PDF com imagem gigante antes de sair do navegador.
+const MAX_MB = 8;
+const TIPOS_OK = /\.(pdf|docx?)$/i;
+
+const FAIXAS = [
+  "Até R$ 1.500",
+  "R$ 1.500 a R$ 2.000",
+  "R$ 2.000 a R$ 2.500",
+  "R$ 2.500 a R$ 3.000",
+  "R$ 3.000 a R$ 4.000",
+  "R$ 4.000 a R$ 5.000",
+  "Acima de R$ 5.000",
+  "Aberto a negociar",
+];
+
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => (
+  { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+));
+const li = (arr) => (arr || []).map((x) => `<li>${esc(x)}</li>`).join("");
+
+const abertas = (window.VAGAS || []).filter((v) => v.aberta);
+const lista = document.getElementById("lista");
+
+if (!abertas.length) {
+  lista.innerHTML = `<div class="vazio"><h2>Nenhuma vaga aberta agora</h2>
+    <p style="margin:10px 0 0">Não estamos com processo em andamento neste momento. Vale voltar a olhar daqui a algumas semanas.</p></div>`;
+} else {
+  lista.innerHTML = abertas.map((v) => `
+    <article class="vaga" id="vaga-${esc(v.id)}">
+      <button class="vaga-topo" aria-expanded="false" aria-controls="corpo-${esc(v.id)}" data-abrir="${esc(v.id)}">
+        <span>
+          <h2>${esc(v.titulo)}</h2>
+          <p class="chamada">${esc(v.chamada)}</p>
+          <span class="tags">
+            <span class="tag destaque">${esc(v.tipo)}</span>
+            <span class="tag">${esc(v.senioridade)}</span>
+            <span class="tag">${esc(v.local)}</span>
+          </span>
+        </span>
+        <span class="chev" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </span>
+      </button>
+      <div class="vaga-corpo" id="corpo-${esc(v.id)}">
+        <p>${esc(v.sobre)}</p>
+        <h3>O que você vai fazer</h3><ul>${li(v.responsabilidades)}</ul>
+        <h3>O que a gente espera</h3><ul>${li(v.requisitos)}</ul>
+        ${v.diferenciais && v.diferenciais.length ? `<h3>Conta como diferencial</h3><ul>${li(v.diferenciais)}</ul>` : ""}
+        <h3>Remuneração</h3><p style="margin-top:0">${esc(v.faixa)}</p>
+        <div class="acoes">
+          <button class="btn" data-candidatar="${esc(v.id)}">Quero me candidatar</button>
+          <button class="btn ghost" data-link="${esc(v.id)}">Copiar link da vaga</button>
+        </div>
+      </div>
+    </article>`).join("");
+}
+
+function toggle(id, forcar) {
+  const el = document.getElementById("vaga-" + id);
+  if (!el) return;
+  const btn = el.querySelector(".vaga-topo");
+  const abrir = forcar === undefined ? !el.classList.contains("open") : forcar;
+  el.classList.toggle("open", abrir);
+  btn.setAttribute("aria-expanded", String(abrir));
+}
+
+lista.addEventListener("click", (e) => {
+  const topo = e.target.closest("[data-abrir]");
+  if (topo) return toggle(topo.dataset.abrir);
+
+  const cand = e.target.closest("[data-candidatar]");
+  if (cand) return abrirForm(cand.dataset.candidatar);
+
+  const link = e.target.closest("[data-link]");
+  if (link) {
+    const url = location.origin + location.pathname + "?vaga=" + link.dataset.link;
+    navigator.clipboard?.writeText(url).then(() => {
+      const antes = link.textContent;
+      link.textContent = "Link copiado";
+      setTimeout(() => { link.textContent = antes; }, 1800);
+    });
+  }
+});
+
+// link direto ?vaga=sdr abre a vaga já expandida
+const alvo = new URLSearchParams(location.search).get("vaga");
+if (alvo && abertas.some((v) => v.id === alvo)) {
+  toggle(alvo, true);
+  document.getElementById("vaga-" + alvo).scrollIntoView({ block: "center", behavior: "smooth" });
+} else if (abertas.length === 1) {
+  toggle(abertas[0].id, true);
+}
+
+/* ---------- formulário ---------- */
+const dlg = document.getElementById("dlg");
+const card = document.getElementById("card");
+
+const CAMPOS = [
+  { n: "nome", l: "Nome completo", t: "text", req: true, ph: "Seu nome", auto: "name" },
+  { n: "email", l: "E-mail", t: "email", req: true, ph: "voce@email.com", auto: "email" },
+  { n: "whatsapp", l: "WhatsApp", t: "tel", req: true, ph: "(51) 99999-9999", auto: "tel" },
+  { n: "linkedin", l: "LinkedIn", t: "url", req: true, ph: "https://linkedin.com/in/seu-perfil" },
+  { n: "cidade", l: "Cidade onde mora", t: "text", req: true, ph: "Porto Alegre" },
+];
+
+function abrirForm(id) {
+  const v = abertas.find((x) => x.id === id);
+  if (!v) return;
+
+  card.innerHTML = `
+    <button class="fechar" type="button" data-fechar aria-label="Fechar">&times;</button>
+    <p class="para">Candidatura para</p>
+    <h2>${esc(v.titulo)}</h2>
+    <form id="form" novalidate>
+      ${CAMPOS.map((c) => `
+        <div class="field" data-campo="${c.n}">
+          <label class="label" for="f-${c.n}">${c.l}</label>
+          <input id="f-${c.n}" name="${c.n}" type="${c.t}" placeholder="${c.ph}"
+                 ${c.auto ? `autocomplete="${c.auto}"` : ""} ${c.req ? "required" : ""}>
+          <div class="erro"></div>
+        </div>`).join("")}
+
+      <div class="field" data-campo="faixa">
+        <label class="label" for="f-faixa">Pretensão salarial</label>
+        <select id="f-faixa" name="faixa" required>
+          <option value="">Selecione uma faixa</option>
+          ${FAIXAS.map((f) => `<option>${esc(f)}</option>`).join("")}
+        </select>
+        <div class="erro"></div>
+      </div>
+
+      <div class="field" data-campo="curriculo">
+        <label class="label" for="f-curriculo">Currículo <span class="opt">PDF, DOC ou DOCX — até ${MAX_MB} MB</span></label>
+        <label class="drop" id="drop">
+          <input id="f-curriculo" name="curriculo" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+          <span class="ico" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+          </span>
+          <span class="txt">
+            <span class="t1" id="drop-t1">Escolher arquivo</span>
+            <span class="t2" id="drop-t2">ou arraste aqui</span>
+          </span>
+          <button class="limpar" type="button" id="drop-limpar" aria-label="Remover arquivo">&times;</button>
+        </label>
+        <div class="erro"></div>
+      </div>
+
+      <div class="field" data-campo="experiencia">
+        <label class="label" for="f-experiencia">Já trabalhou com vendas ou prospecção? <span class="opt">Se não, conte o que você fez até aqui.</span></label>
+        <textarea id="f-experiencia" name="experiencia" required placeholder="Onde, por quanto tempo e o que você fazia no dia a dia."></textarea>
+        <div class="erro"></div>
+      </div>
+
+      <div class="field" data-campo="porque">
+        <label class="label" for="f-porque">Por que essa vaga? <span class="opt">Opcional</span></label>
+        <textarea id="f-porque" name="porque" placeholder="O que te chamou atenção na vaga ou na V4."></textarea>
+        <div class="erro"></div>
+      </div>
+
+      <div class="aviso">Ao enviar, seus dados vão para o time da V4 Mendes e são usados só neste processo seletivo.</div>
+      <button class="btn enviar" type="submit">Enviar candidatura</button>
+    </form>`;
+
+  dlg.showModal();
+  setTimeout(() => card.querySelector("#f-nome")?.focus(), 80);
+
+  const form = card.querySelector("#form");
+  ligarUpload(form);
+
+  const marcar = (nome, msg) => {
+    const campo = card.querySelector(`[data-campo="${nome}"]`);
+    campo.classList.toggle("invalido", !!msg);
+    campo.querySelector(".erro").textContent = msg || "";
+    return !msg;
+  };
+
+  const validar = () => {
+    let ok = true, primeiro = null;
+    const val = (n) => (form.elements[n]?.value || "").trim();
+
+    const checa = (nome, msg, cond) => {
+      const bom = marcar(nome, cond ? "" : msg);
+      if (!bom && !primeiro) primeiro = nome;
+      ok = ok && bom;
+    };
+
+    checa("nome", "Diga seu nome completo.", val("nome").length >= 3);
+    checa("email", "E-mail inválido.", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val("email")));
+    checa("whatsapp", "Informe DDD + número.", val("whatsapp").replace(/\D/g, "").length >= 10);
+    checa("linkedin", "Cole o endereço do seu perfil do LinkedIn.", /linkedin\.com\/(in|pub)\//i.test(val("linkedin")));
+    checa("cidade", "Informe sua cidade.", val("cidade").length >= 2);
+    checa("faixa", "Escolha uma faixa.", !!val("faixa"));
+
+    const arq = form.elements.curriculo.files[0];
+    if (!arq) checa("curriculo", "Anexe seu currículo em PDF, DOC ou DOCX.", false);
+    else if (!TIPOS_OK.test(arq.name)) checa("curriculo", "Formato não aceito. Use PDF, DOC ou DOCX.", false);
+    else checa("curriculo", `Arquivo muito grande (máx. ${MAX_MB} MB).`, arq.size <= MAX_MB * 1024 * 1024);
+
+    checa("experiencia", "Conte um pouco — pelo menos uma frase.", val("experiencia").length >= 15);
+
+    if (primeiro) card.querySelector(`#f-${primeiro}`)?.focus();
+    return ok;
+  };
+
+  form.addEventListener("input", (e) => {
+    const campo = e.target.closest("[data-campo]");
+    if (campo?.classList.contains("invalido")) marcar(campo.dataset.campo, "");
+  });
+  form.addEventListener("change", (e) => {
+    const campo = e.target.closest("[data-campo]");
+    if (campo?.classList.contains("invalido")) marcar(campo.dataset.campo, "");
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (!validar()) return;
+
+    const btn = form.querySelector(".enviar");
+    btn.disabled = true;
+    btn.textContent = "Enviando…";
+
+    const dados = {
+      "Vaga": v.titulo,
+      "Vaga (id)": v.id,
+      "Nome": form.elements.nome.value.trim(),
+      "E-mail": form.elements.email.value.trim(),
+      "WhatsApp": form.elements.whatsapp.value.trim(),
+      "LinkedIn": form.elements.linkedin.value.trim(),
+      "Cidade": form.elements.cidade.value.trim(),
+      "Pretensão salarial": form.elements.faixa.value,
+      "Experiência": form.elements.experiencia.value.trim(),
+      "Por que essa vaga": form.elements.porque.value.trim(),
+      "Origem": location.href,
+    };
+
+    try {
+      if (!/^https:\/\/script\.google\.com\//.test(CONFIG.endpoint)) {
+        throw new Error("endpoint-nao-configurado");
+      }
+
+      const arq = form.elements.curriculo.files[0];
+      dados.__arquivo = {
+        nome: arq.name,
+        tipo: arq.type || "application/octet-stream",
+        base64: await lerBase64(arq),
+      };
+      await fetch(CONFIG.endpoint, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(dados),
+      });
+      sucesso(v);
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = "Enviar candidatura";
+      const aviso = card.querySelector(".aviso");
+      aviso.style.borderColor = "#a50e10";
+      aviso.style.color = "#ff4143";
+      aviso.textContent =
+        err.message === "endpoint-nao-configurado"
+          ? "O formulário ainda não está conectado à planilha. Avise o time da V4."
+          : err.message === "leitura-do-arquivo"
+            ? "Não conseguimos ler o arquivo do currículo. Tente anexar de novo."
+            : "Não conseguimos enviar agora. Tente de novo em instantes ou fale com a gente pelo WhatsApp.";
+    }
+  });
+}
+
+/* input de arquivo: nome na tela, arrastar e soltar, botão de remover */
+function ligarUpload(form) {
+  const drop = card.querySelector("#drop");
+  const input = form.elements.curriculo;
+  const t1 = card.querySelector("#drop-t1");
+  const t2 = card.querySelector("#drop-t2");
+
+  const pintar = () => {
+    const arq = input.files[0];
+    drop.classList.toggle("cheio", !!arq);
+    t1.textContent = arq ? arq.name : "Escolher arquivo";
+    t2.textContent = arq
+      ? (arq.size / 1048576).toFixed(arq.size < 1048576 ? 2 : 1) + " MB"
+      : "ou arraste aqui";
+  };
+
+  input.addEventListener("change", pintar);
+
+  card.querySelector("#drop-limpar").addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    input.value = "";
+    pintar();
+    marcarCampo("curriculo", "");
+  });
+
+  ["dragenter", "dragover"].forEach((ev) =>
+    drop.addEventListener(ev, (e) => { e.preventDefault(); drop.classList.add("hover"); }));
+  ["dragleave", "drop"].forEach((ev) =>
+    drop.addEventListener(ev, () => drop.classList.remove("hover")));
+  drop.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const arq = e.dataTransfer.files[0];
+    if (!arq) return;
+    const dt = new DataTransfer();
+    dt.items.add(arq);
+    input.files = dt.files;
+    pintar();
+    marcarCampo("curriculo", "");
+  });
+}
+
+function marcarCampo(nome, msg) {
+  const campo = card.querySelector(`[data-campo="${nome}"]`);
+  if (!campo) return;
+  campo.classList.toggle("invalido", !!msg);
+  campo.querySelector(".erro").textContent = msg || "";
+}
+
+// lê o arquivo como base64 puro (sem o prefixo data:...;base64,)
+function lerBase64(arq) {
+  return new Promise((ok, falha) => {
+    const r = new FileReader();
+    r.onload = () => ok(String(r.result).split(",")[1] || "");
+    r.onerror = () => falha(new Error("leitura-do-arquivo"));
+    r.readAsDataURL(arq);
+  });
+}
+
+function sucesso(v) {
+  card.innerHTML = `
+    <div class="ok">
+      <div class="mark">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h2>Candidatura enviada</h2>
+      <p>Recebemos sua inscrição para <strong>${esc(v.titulo)}</strong>. Se o perfil fizer sentido, a gente chama pelo WhatsApp ou e-mail que você deixou.</p>
+      <button class="btn ghost" type="button" data-fechar>Voltar para as vagas</button>
+    </div>`;
+}
+
+dlg.addEventListener("click", (e) => {
+  if (e.target.closest("[data-fechar]") || e.target === dlg || e.target.classList.contains("modal")) dlg.close();
+});
+</script>
+</body>
+</html>
