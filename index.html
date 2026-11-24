@@ -271,7 +271,7 @@ const card = document.getElementById("card");
 const CAMPOS = [
   { n: "nome", l: "Nome completo", t: "text", req: true, ph: "Seu nome", auto: "name" },
   { n: "email", l: "E-mail", t: "email", req: true, ph: "voce@email.com", auto: "email" },
-  { n: "whatsapp", l: "WhatsApp", t: "tel", req: true, ph: "(51) 99999-9999", auto: "tel" },
+  { n: "whatsapp", l: "WhatsApp", t: "tel", req: true, ph: "(51) 99999-9999", auto: "tel", max: 15, mode: "numeric" },
   { n: "linkedin", l: "LinkedIn", t: "url", req: true, ph: "https://linkedin.com/in/seu-perfil" },
   { n: "cidade", l: "Cidade onde mora", t: "text", req: true, ph: "Porto Alegre" },
 ];
@@ -289,6 +289,7 @@ function abrirForm(id) {
         <div class="field" data-campo="${c.n}">
           <label class="label" for="f-${c.n}">${c.l}</label>
           <input id="f-${c.n}" name="${c.n}" type="${c.t}" placeholder="${c.ph}"
+                 ${c.mode ? `inputmode="${c.mode}"` : ""} ${c.max ? `maxlength="${c.max}"` : ""}
                  ${c.auto ? `autocomplete="${c.auto}"` : ""} ${c.req ? "required" : ""}>
           <div class="erro"></div>
         </div>`).join("")}
@@ -386,7 +387,8 @@ function abrirForm(id) {
 
     checa("nome", "Diga seu nome completo.", val("nome").length >= 3);
     checa("email", "E-mail inválido.", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val("email")));
-    checa("whatsapp", "Informe DDD + número.", val("whatsapp").replace(/\D/g, "").length >= 10);
+    checa("whatsapp", "Use DDD + número. Ex.: (51) 99999-9999.",
+      /^[1-9]{2}9?\d{8}$/.test(val("whatsapp").replace(/\D/g, "")));
     checa("linkedin", "Cole o endereço do seu perfil do LinkedIn.", /linkedin\.com\/(in|pub)\//i.test(val("linkedin")));
     checa("cidade", "Informe sua cidade.", val("cidade").length >= 2);
     checa("faixa", "Escolha uma faixa.", !!val("faixa"));
@@ -405,6 +407,7 @@ function abrirForm(id) {
   };
 
   form.addEventListener("input", (e) => {
+    if (e.target.name === "whatsapp") e.target.value = mascaraTel(e.target.value);
     const campo = e.target.closest("[data-campo]");
     if (campo?.classList.contains("invalido")) marcar(campo.dataset.campo, "");
   });
@@ -519,6 +522,15 @@ function marcarCampo(nome, msg) {
   if (!campo) return;
   campo.classList.toggle("invalido", !!msg);
   campo.querySelector(".erro").textContent = msg || "";
+}
+
+// (51) 99999-9999 com 11 dígitos, (51) 9999-9999 com 10. Corta o resto.
+function mascaraTel(v) {
+  const d = String(v).replace(/\D/g, "").slice(0, 11);
+  if (d.length < 3) return d.length ? "(" + d : "";
+  if (d.length < 7) return "(" + d.slice(0, 2) + ") " + d.slice(2);
+  const meio = d.length === 11 ? 7 : 6;
+  return "(" + d.slice(0, 2) + ") " + d.slice(2, meio) + "-" + d.slice(meio);
 }
 
 // lê o arquivo como base64 puro (sem o prefixo data:...;base64,)
