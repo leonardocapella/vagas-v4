@@ -14,7 +14,7 @@ window.VAGAS = [
     titulo: "SDR — Sales Development Representative",
     chamada: "Qualificar o lead que chega e marcar reunião para o time comercial.",
     local: "Presencial — Rua Hilário Ribeiro 214, Porto Alegre/RS",
-    tipo: "CLT",
+    tipo: "PJ",
     senioridade: "Júnior",
     faixa: "A combinar — fixo + variável por meta",
     sobre:
@@ -46,7 +46,7 @@ window.VAGAS = [
     titulo: "BDR — Business Development Representative",
     chamada: "Prospectar empresa que ainda não conhece a V4 e abrir a conversa.",
     local: "Presencial — Rua Hilário Ribeiro 214, Porto Alegre/RS",
-    tipo: "CLT",
+    tipo: "PJ",
     senioridade: "Júnior",
     faixa: "A combinar — fixo + variável por meta",
     sobre:
@@ -73,3 +73,6 @@ window.VAGAS = [
     ],
   },
 ];
+
+// nome do campo escondido. Tem que ser o mesmo de ARMADILHA em apps-script.gs.
+window.ARMADILHA = "website";

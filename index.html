@@ -111,6 +111,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .drop.cheio .limpar{display:grid}
 .drop .limpar:hover{color:var(--white);border-color:var(--white)}
 .aviso{margin-top:22px;padding:13px 15px;border-radius:11px;background:#0f0f0f;border:1px solid var(--line);color:var(--mute);font-size:13px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .enviar{margin-top:24px;width:100%}
 .ok{text-align:center;padding:16px 0}
 .ok .mark{width:62px;height:62px;margin:0 auto 20px;border-radius:50%;background:#10281a;border:1px solid #1f5131;display:grid;place-items:center}
@@ -166,7 +167,7 @@ footer a{color:var(--mute)}
 <script>
 const CONFIG = {
   // Cole aqui a URL /exec do Apps Script publicado (ver README.md)
-  endpoint: "COLE_A_URL_DO_APPS_SCRIPT_AQUI",
+  endpoint: "https://script.google.com/a/macros/v4company.com/s/AKfycbwF_ZgvgI6Md4dopKEqJzumoyTeHVuipT8JCGfd07yrpWIpplOu02ePGTqO5HvsBlabew/exec",
 };
 
 // Apps Script aceita ~50 MB por requisição, mas base64 infla ~33% e a cota do Drive é do Leonardo.
@@ -329,6 +330,33 @@ function abrirForm(id) {
         <div class="erro"></div>
       </div>
 
+      <div class="field" data-campo="presencial">
+        <label class="label" for="f-presencial">Pode trabalhar presencialmente em Porto Alegre?</label>
+        <select id="f-presencial" name="presencial" required>
+          <option value="">Selecione</option>
+          <option>Sim, posso ir todo dia</option>
+          <option>Sim, alguns dias na semana</option>
+          <option>Não</option>
+        </select>
+        <div class="erro"></div>
+      </div>
+
+      <div class="field" data-campo="regime">
+        <label class="label" for="f-regime">A vaga é PJ. Você aceita?</label>
+        <select id="f-regime" name="regime" required>
+          <option value="">Selecione</option>
+          <option>Sim, aceito PJ</option>
+          <option>Prefiro CLT, mas aceito PJ</option>
+          <option>Só CLT</option>
+        </select>
+        <div class="erro"></div>
+      </div>
+
+      <div class="hp" aria-hidden="true">
+        <label for="f-website">Site</label>
+        <input id="f-website" name="${esc(window.ARMADILHA || "website")}" type="text" tabindex="-1" autocomplete="off">
+      </div>
+
       <div class="aviso">Ao enviar, seus dados vão para o time da V4 Mendes e são usados só neste processo seletivo.</div>
       <button class="btn enviar" type="submit">Enviar candidatura</button>
     </form>`;
@@ -362,6 +390,8 @@ function abrirForm(id) {
     checa("linkedin", "Cole o endereço do seu perfil do LinkedIn.", /linkedin\.com\/(in|pub)\//i.test(val("linkedin")));
     checa("cidade", "Informe sua cidade.", val("cidade").length >= 2);
     checa("faixa", "Escolha uma faixa.", !!val("faixa"));
+    checa("presencial", "Diga se pode trabalhar presencialmente.", !!val("presencial"));
+    checa("regime", "Diga se aceita PJ.", !!val("regime"));
 
     const arq = form.elements.curriculo.files[0];
     if (!arq) checa("curriculo", "Anexe seu currículo em PDF, DOC ou DOCX.", false);
@@ -400,10 +430,13 @@ function abrirForm(id) {
       "LinkedIn": form.elements.linkedin.value.trim(),
       "Cidade": form.elements.cidade.value.trim(),
       "Pretensão salarial": form.elements.faixa.value,
+      "Presencial": form.elements.presencial.value,
+      "Regime": form.elements.regime.value,
       "Experiência": form.elements.experiencia.value.trim(),
       "Por que essa vaga": form.elements.porque.value.trim(),
       "Origem": location.href,
     };
+    dados[window.ARMADILHA || "website"] = (form.elements[window.ARMADILHA || "website"]?.value || "").trim();
 
     try {
       if (!/^https:\/\/script\.google\.com\//.test(CONFIG.endpoint)) {

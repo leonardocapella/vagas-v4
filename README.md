@@ -34,7 +34,8 @@ divulgar uma vaga só. Não mude o `id` depois de divulgar, senão o link antigo
    (`vinicius.mendes@v4company.com`) e `AVISAR_CC` põe a Ancila em cópia
    (`ancila.ferreira@v4company.com`). Lista vazia = não avisa ninguém.
    **O e-mail sai da conta que publicar o Apps Script** — o remetente será essa conta.
-4. Abra [script.google.com](https://script.google.com), projeto novo, cole o arquivo inteiro.
+4. Abra [script.google.com](https://script.google.com) **logado em leonardo.capella@v4company.com**,
+   projeto novo, cole o arquivo inteiro.
 5. Rode a função `configurar` uma vez e autorize o acesso.
 6. **Implantar > Nova implantação > App da Web**
    - Executar como: **eu**
@@ -61,42 +62,21 @@ erro — os dados do candidato valem mais que o anexo.
 
 ## Nota automática de 0 a 10
 
-Cada currículo em PDF recebe uma nota da IA, com justificativa, nas colunas **Nota IA** e
-**Nota IA - Justificativa**. A nota é **só interna** — o candidato nunca vê. Na planilha ela vem
-com escala de cor (vermelho → amarelo → verde), então dá para ordenar e varrer de cima.
+A nota sai de regra fixa em `pontuar_`, a partir de `IA_CRITERIOS` e das respostas do formulário
+(experiência, presencial, aceite de PJ). Sem API e sem chave. Colunas **Nota** e
+**Justificativa**. A nota é **só interna** — o candidato nunca vê. Na planilha ela vem com
+escala de cor (vermelho → amarelo → verde).
 
-**Modelo:** Claude Haiku 5.5, lendo o PDF direto. Custo medido: **~US$ 0,0005 por currículo**
-(uns 5 centavos de dólar a cada 100 candidaturas).
+A regra casa palavras no texto que o candidato escreveu. Não lê o PDF. "Não fiz vendas" ainda
+conta como experiência em vendas.
 
-**Para ligar**, em Apps Script > ⚙ Configurações do projeto > Propriedades do script:
+**A nota é um atalho de triagem, não um veredito.** Quem decide é a pessoa.
 
-| Nome | Valor |
-| --- | --- |
-| `ANTHROPIC_API_KEY` | sua chave `sk-ant-...` |
+## Campo contra robô
 
-> A chave **nunca** vai no código — este repositório é público. Sem a chave, a candidatura é
-> gravada normalmente e a nota fica em branco.
-
-**Os critérios estão em `IA_CRITERIOS`**, no topo do `apps-script.gs`. É o que define o que conta
-como currículo bom — reescreva conforme o time for calibrando. Hoje pesa: experiência em
-vendas/prospecção, evidência de meta batida, uso de CRM, clareza da escrita, estabilidade e
-formação na área.
-
-Resultado dos testes com currículo real (escala conferida de ponta a ponta):
-
-| Currículo | Nota |
-| --- | --- |
-| SDR com 3 anos, 21/24 metas batidas, HubSpot e Kommo | 8,0 |
-| Auxiliar de depósito, sem experiência em vendas | 2,0 |
-| Arquivo que não era currículo (lista de compras) | 0,0 |
-
-Só PDF é avaliado — currículo em Word entra na planilha com a nota em branco e um aviso na
-justificativa. Se a IA falhar ou recusar, a candidatura é gravada igual, com a nota vazia.
-
-**A nota é um atalho de triagem, não um veredito.** Ela ordena a fila para o time olhar primeiro
-quem tem mais chance; quem decide é a pessoa. Vale conferir as primeiras notas contra o seu
-próprio julgamento antes de confiar na ordenação — e lembrar que currículo mal formatado pode
-tirar nota baixa sendo um bom candidato.
+O formulário manda um campo escondido (`website`, em `window.ARMADILHA`). Pessoa não preenche.
+Se chegar preenchido, o Apps Script descarta o envio: não grava e não manda e-mail. O nome tem
+que ser o mesmo em `vagas.js` e em `ARMADILHA` no `apps-script.gs`.
 
 ## Planilha
 
@@ -117,7 +97,7 @@ GitHub Pages serve do branch `main`, raiz.
 - **Login / área do candidato.** Não tem para quem logar.
 - **Integração com o Kommo.** O Kommo é o CRM dos clientes, não da unidade
   (regra do vault). Candidatura de vaga fica na planilha.
-- **Nota para currículo em Word.** A API lê PDF como documento, não `.docx`. Converter no
-  servidor exigiria mais peça; o caso é minoria e cai na triagem manual.
+- **Leitura do currículo.** A nota olha o que o candidato escreveu, não o PDF. Ler o arquivo
+  exigiria outra peça.
 - **E-mail automático para o candidato.** Hoje o aviso vai só para o time. Resposta ao candidato
   continua na mão, como as mensagens de cliente.

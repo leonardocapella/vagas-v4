@@ -2,12 +2,10 @@
  * Vagas V4 Mendes — recebe as candidaturas da página e grava na planilha.
  *
  * Como ligar (uma vez):
- *  1. Crie uma planilha nova no Drive e copie o id da URL
- *     (https://docs.google.com/spreadsheets/d/<ESTE_PEDACO>/edit).
- *  2. Cole esse id em PLANILHA_ID abaixo.
- *  3. Em script.google.com, cole este arquivo num projeto novo.
- *  4. Rode a função `configurar` uma vez (ela cria e formata o cabeçalho) e autorize o acesso.
- *  5. Implantar > Nova implantação > Tipo "App da Web":
+ *  1. PLANILHA_ID abaixo já aponta para "Vagas V4 Mendes - Candidaturas".
+ *  2. Em script.google.com, cole este arquivo num projeto novo (conta leonardo.capella@v4company.com).
+ *  3. Rode a função `configurar` uma vez (ela cria e formata o cabeçalho) e autorize o acesso.
+ *  4. Implantar > Nova implantação > Tipo "App da Web":
  *       Executar como: eu
  *       Quem tem acesso: qualquer pessoa
  *     Copie a URL que termina em /exec e cole em CONFIG.endpoint no index.html.
@@ -17,7 +15,7 @@
  * servindo o código antigo.
  */
 
-const PLANILHA_ID = "COLE_O_ID_DA_PLANILHA_AQUI";
+const PLANILHA_ID = "15luA7XxTGrWFCnwJbXJPOih4rX5smT5M6zeG7WL7-bw";
 const ABA = "Candidaturas";
 
 // Pasta do Drive onde os currículos são salvos. Deixe "" para o script criar
@@ -31,18 +29,9 @@ const AVISAR = ["vinicius.mendes@v4company.com"];
 // Em cópia (Cc).
 const AVISAR_CC = ["ancila.ferreira@v4company.com"];
 
-/**
- * Nota automática de 0 a 10 do currículo, feita por IA lendo o PDF.
- *
- * A chave da API fica nas Script Properties, NUNCA no código:
- *   Apps Script > ⚙ Configurações do projeto > Propriedades do script > Adicionar
- *   Nome: ANTHROPIC_API_KEY   Valor: sk-ant-...
- *
- * Sem a chave configurada, a nota fica em branco e a candidatura é gravada normalmente.
- * A nota é só interna: o candidato nunca vê.
- */
-const IA_MODELO = "claude-haiku-5-5";
-const IA_NOTA_ATIVA = true;
+// Nota de 0 a 10 por regra fixa (pontuar_). Sem API. O candidato nunca vê.
+// Mesmo nome do input escondido em vagas.js (window.ARMADILHA). Preenchido = robô.
+const ARMADILHA = "website";
 
 const COLUNAS = [
   "Data/Hora",
@@ -54,18 +43,19 @@ const COLUNAS = [
   "LinkedIn",
   "Cidade",
   "Pretensão salarial",
+  "Presencial",
+  "Regime",
   "Experiência",
   "Por que essa vaga",
   "Currículo",
-  "Nota IA",
-  "Nota IA - Justificativa",
+  "Nota",
+  "Justificativa",
   "Status",
   "Origem",
 ];
 
-// Critérios que a IA usa para dar a nota. Reescreva à vontade — é isto que define o que
-// conta como currículo bom para a vaga. Vale para SDR e BDR; se as vagas ficarem muito
-// diferentes, dá para trocar por um texto por vaga (chave = id da vaga).
+// O que a nota procura, na ordem do peso. Vale para SDR e BDR.
+// pontuar_ transforma cada linha em pontos; reescreva os dois juntos.
 const IA_CRITERIOS = [
   "Experiência em vendas, pré-vendas, prospecção, telemarketing, atendimento ou varejo — quanto mais próxima de outbound/inside sales, melhor.",
   "Evidência de trabalho com meta, comissão ou indicador de desempenho.",
@@ -80,32 +70,47 @@ const BLOCOS = [
   { ate: 1, cor: "#171717" },  // Data/Hora
   { ate: 3, cor: "#E50914" },  // Vaga
   { ate: 8, cor: "#262626" },  // Contato
-  { ate: 12, cor: "#404040" }, // Respostas e currículo
-  { ate: 14, cor: "#a50e10" }, // Nota da IA
-  { ate: 16, cor: "#171717" }, // Controle interno
+  { ate: 14, cor: "#404040" }, // Respostas e currículo
+  { ate: 16, cor: "#a50e10" }, // Nota
+  { ate: 18, cor: "#171717" }, // Controle interno
 ];
 
 function doPost(e) {
+  let dados;
+  try {
+    dados = JSON.parse(e.postData.contents);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ ok: false, erro: String(err) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // robô preenche o campo escondido: descarta, sem planilha e sem e-mail
+  if (String(dados[ARMADILHA] || "").trim()) {
+    return ContentService.createTextOutput(JSON.stringify({ ok: true }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  delete dados[ARMADILHA];
+
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
-    const dados = JSON.parse(e.postData.contents);
     const aba = pegarAba_();
     if (aba.getLastRow() === 0) { configurar(); }
 
     dados["Data/Hora"] = Utilities.formatDate(new Date(), "America/Sao_Paulo", "dd/MM/yyyy HH:mm:ss");
     if (!dados["Status"]) dados["Status"] = "Novo";
 
+    try {
+      const nota = pontuar_(dados);
+      dados["Nota"] = nota.nota;
+      dados["Justificativa"] = nota.justificativa;
+    } catch (err) {
+      console.error("nota falhou: " + err);
+    }
+
     // currículo: chega em base64 e vai para uma pasta do Drive; na planilha fica o link
     if (dados.__arquivo && dados.__arquivo.base64) {
       dados["Currículo"] = salvarCurriculo_(dados.__arquivo, dados);
-
-      // nota da IA antes de gravar, para cair na mesma linha da candidatura
-      const nota = avaliarCurriculo_(dados.__arquivo, dados);
-      if (nota) {
-        dados["Nota IA"] = nota.nota;
-        dados["Nota IA - Justificativa"] = nota.justificativa;
-      }
     }
 
     // garante coluna para toda chave recebida (se o formulário ganhar pergunta nova)
@@ -185,99 +190,75 @@ function salvarCurriculo_(arq, dados) {
   }
 }
 
+function semAcento_(s) {
+  return String(s || "").toLowerCase()
+    .replace(/[áàâã]/g, "a").replace(/[éê]/g, "e").replace(/í/g, "i")
+    .replace(/[óôõ]/g, "o").replace(/[úü]/g, "u").replace(/ç/g, "c");
+}
+
+function tem_(texto, palavras) {
+  return palavras.some(function (p) { return texto.indexOf(p) !== -1; });
+}
+
 /**
- * Manda o PDF para a Claude API e devolve { nota, justificativa }.
- * Devolve null (sem nota) em qualquer falha — a candidatura nunca se perde por causa da IA.
- * Só PDF é avaliado: a API não lê .doc/.docx como documento.
+ * Nota de 0 a 10 a partir do formulário. Devolve { nota, justificativa }.
+ * ponytail: casa palavra no texto, não lê o currículo. "não fiz vendas" ainda pontua.
+ * Trocar por leitura do PDF se a triagem manual não der conta.
+ * Pesos (somam 10): experiência 3, meta 1.5, CRM 1.5, texto 1.5, tempo 0.5,
+ * formação 0.5, presencial 1, aceita PJ 0.5.
  */
-function avaliarCurriculo_(arq, dados) {
-  if (!IA_NOTA_ATIVA) return null;
+function pontuar_(dados) {
+  const exp = String(dados["Experiência"] || "").trim();
+  const texto = semAcento_(exp + " " + (dados["Por que essa vaga"] || ""));
+  const ok = [];
+  const falta = [];
+  let pontos = 0;
 
-  const chave = PropertiesService.getScriptProperties().getProperty("ANTHROPIC_API_KEY");
-  if (!chave) {
-    console.warn("ANTHROPIC_API_KEY não configurada — candidatura gravada sem nota");
-    return null;
+  if (tem_(texto, ["prospeccao", "outbound", "inside sales", "pre-venda", "pre venda", "sdr", "bdr", "cold call", "cold mail"])) {
+    pontos += 3; ok.push("experiência em outbound ou inside sales");
+  } else if (tem_(texto, ["venda", "vendas", "telemarketing", "atendimento", "varejo", "comercial"])) {
+    pontos += 2; ok.push("experiência em vendas, atendimento ou varejo");
+  } else if (texto.length >= 40) {
+    pontos += 0.5; falta.push("experiência ligada a vendas");
+  } else {
+    falta.push("experiência em vendas");
   }
-  if (!/\.pdf$/i.test(String(arq.nome))) {
-    return { nota: "", justificativa: "(nota automática só para PDF; este currículo veio em Word)" };
+
+  if (tem_(texto, ["meta", "comissao", "indicador", "kpi"])) {
+    pontos += 1.5; ok.push("cita meta ou comissão");
+  } else falta.push("meta ou comissão");
+
+  if (tem_(texto, ["kommo", "hubspot", "pipedrive", "rd station", "apollo", "meetime", "salesforce", "crm", "reev", "sellbird"])) {
+    pontos += 1.5; ok.push("já usou CRM ou cadência");
+  } else falta.push("CRM");
+
+  if (exp.length >= 80) { pontos += 1.5; ok.push("texto claro"); }
+  else if (exp.length >= 40) { pontos += 1; ok.push("texto curto"); }
+  else if (exp.length >= 15) { pontos += 0.5; }
+  else falta.push("texto da experiência");
+
+  if (/\b\d+\s*anos?\b/.test(texto)) {
+    pontos += 0.5; ok.push("informa tempo de casa");
   }
 
-  const esquema = {
-    type: "object",
-    properties: {
-      nota: {
-        type: "number",
-        description: "Nota de 0 a 10 para a aderência do currículo à vaga. Pode ter uma casa decimal.",
-      },
-      justificativa: {
-        type: "string",
-        description: "2 a 4 frases, em português do Brasil, dizendo o que sustenta a nota e o que falta. Citar o que está escrito no currículo, não supor.",
-      },
-    },
-    required: ["nota", "justificativa"],
-    additionalProperties: false,
-  };
-
-  const prompt =
-    "Você avalia currículos para uma vaga de " + (dados["Vaga"] || "vendas") +
-    " numa agência de marketing (V4 Company), em Porto Alegre.\n\n" +
-    "Critérios, em ordem de peso:\n" +
-    IA_CRITERIOS.map(function (c, i) { return (i + 1) + ". " + c; }).join("\n") +
-    "\n\nO candidato também respondeu no formulário:\n" +
-    "- Experiência declarada: " + (dados["Experiência"] || "(não respondeu)") + "\n" +
-    "- Pretensão salarial: " + (dados["Pretensão salarial"] || "(não informou)") + "\n" +
-    "- Cidade: " + (dados["Cidade"] || "(não informou)") + "\n\n" +
-    "Dê uma nota de 0 a 10 para a aderência do currículo anexo a essa vaga. " +
-    "Seja criterioso e use a escala toda: 5 é um candidato mediano, 8 ou mais é raro e " +
-    "precisa de evidência clara no currículo. Não invente experiência que não está escrita. " +
-    "Se o currículo estiver vazio, ilegível ou não for um currículo, dê 0 e diga isso.";
-
-  try {
-    const resp = UrlFetchApp.fetch("https://api.anthropic.com/v1/messages", {
-      method: "post",
-      contentType: "application/json",
-      muteHttpExceptions: true,
-      headers: { "x-api-key": chave, "anthropic-version": "2026-10-21" },
-      payload: JSON.stringify({
-        model: IA_MODELO,
-        max_tokens: 1024,
-        output_config: { format: { type: "json_schema", schema: esquema } },
-        messages: [{
-          role: "user",
-          content: [
-            { type: "document", source: { type: "base64", media_type: "application/pdf", data: arq.base64 } },
-            { type: "text", text: prompt },
-          ],
-        }],
-      }),
-    });
-
-    const codigo = resp.getResponseCode();
-    if (codigo !== 200) {
-      console.error("Claude API devolveu " + codigo + ": " + resp.getContentText().slice(0, 500));
-      return { nota: "", justificativa: "(falha na avaliação automática: HTTP " + codigo + ")" };
-    }
-
-    const corpo = JSON.parse(resp.getContentText());
-
-    // classificador de segurança pode recusar; nunca é erro HTTP
-    if (corpo.stop_reason === "refusal") {
-      return { nota: "", justificativa: "(a IA recusou avaliar este arquivo)" };
-    }
-
-    const texto = (corpo.content || [])
-      .filter(function (b) { return b.type === "text"; })
-      .map(function (b) { return b.text; }).join("");
-
-    const json = JSON.parse(texto);
-    const n = Number(json.nota);
-    if (!isFinite(n) || n < 0 || n > 10) throw new Error("nota fora de 0–10: " + json.nota);
-
-    return { nota: Math.round(n * 10) / 10, justificativa: String(json.justificativa || "") };
-  } catch (err) {
-    console.error("avaliação do currículo falhou: " + err);
-    return { nota: "", justificativa: "(falha na avaliação automática)" };
+  if (tem_(texto, ["administracao", "marketing", "comunicacao", "faculdade", "graduacao", "tecnologo", "curso"])) {
+    pontos += 0.5; ok.push("formação na área");
   }
+
+  if (semAcento_(dados["Presencial"]).indexOf("sim") === 0) {
+    pontos += 1; ok.push("disponível presencial");
+  } else falta.push("presencial em Porto Alegre");
+
+  const regime = semAcento_(dados["Regime"]);
+  if (regime.indexOf("pj") !== -1 || regime.indexOf("tanto") !== -1) {
+    pontos += 0.5; ok.push("aceita PJ");
+  } else falta.push("aceite de PJ");
+
+  const nota = Math.round(Math.min(10, Math.max(0, pontos)) * 10) / 10;
+  const justificativa =
+    (ok.length ? ok.join(", ") + "." : "Nenhum requisito atendido.") +
+    (falta.length ? " Falta: " + falta.join(", ") + "." : "");
+  return { nota: nota, justificativa: justificativa };
 }
 
 function pastaCurriculos_() {
@@ -315,8 +296,9 @@ function formatar_(aba) {
   aba.setFrozenRows(1);
   const largura = { "Data/Hora": 140, "Vaga": 250, "Vaga (id)": 90, "Nome": 200, "E-mail": 220,
                     "WhatsApp": 140, "LinkedIn": 260, "Cidade": 150, "Pretensão salarial": 160,
+                    "Presencial": 220, "Regime": 110,
                     "Experiência": 420, "Por que essa vaga": 360, "Currículo": 220,
-                    "Nota IA": 80, "Nota IA - Justificativa": 400,
+                    "Nota": 80, "Justificativa": 400,
                     "Status": 120, "Origem": 240 };
   COLUNAS.forEach(function (nome, i) { if (largura[nome]) aba.setColumnWidth(i + 1, largura[nome]); });
 
@@ -329,8 +311,8 @@ function formatar_(aba) {
     aba.getRange(2, col, Math.max(aba.getMaxRows() - 1, 1), 1).setDataValidation(regra);
   }
 
-  // Nota da IA: centralizada, em negrito e com escala de cor (vermelho -> amarelo -> verde)
-  const cNota = COLUNAS.indexOf("Nota IA") + 1;
+  // Nota: centralizada, em negrito e com escala de cor (vermelho -> amarelo -> verde)
+  const cNota = COLUNAS.indexOf("Nota") + 1;
   if (cNota > 0) {
     const faixa = aba.getRange(2, cNota, Math.max(aba.getMaxRows() - 1, 1), 1);
     faixa.setHorizontalAlignment("center").setFontWeight("bold").setNumberFormat("0.0");
@@ -352,15 +334,17 @@ function avisar_(dados) {
       to: AVISAR.join(","),
       cc: (AVISAR_CC || []).join(","),
       subject: "Nova candidatura — " + (dados["Vaga"] || "vaga V4") +
-               (dados["Nota IA"] !== undefined && dados["Nota IA"] !== ""
-                 ? " — nota " + dados["Nota IA"] : ""),
+               (dados["Nota"] !== undefined && dados["Nota"] !== ""
+                 ? " — nota " + dados["Nota"] : ""),
       htmlBody:
         "<p><b>" + escapar_(dados["Nome"]) + "</b> se candidatou para <b>" +
         escapar_(dados["Vaga"]) + "</b>.</p>" +
-        (dados["Nota IA"] !== undefined && dados["Nota IA"] !== ""
-          ? "<p style='font-size:15px'><b>Nota da IA: " + escapar_(dados["Nota IA"]) + "/10</b><br>" +
-            "<span style='color:#555'>" + escapar_(dados["Nota IA - Justificativa"]) + "</span></p>"
+        (dados["Nota"] !== undefined && dados["Nota"] !== ""
+          ? "<p style='font-size:15px'><b>Nota: " + escapar_(dados["Nota"]) + "/10</b><br>" +
+            "<span style='color:#555'>" + escapar_(dados["Justificativa"]) + "</span></p>"
           : "") +
+        "<p>Presencial: " + escapar_(dados["Presencial"]) + "<br>" +
+        "Regime: " + escapar_(dados["Regime"]) + "</p>" +
         "<p>WhatsApp: " + escapar_(dados["WhatsApp"]) + "<br>" +
         "E-mail: " + escapar_(dados["E-mail"]) + "<br>" +
         "LinkedIn: " + escapar_(dados["LinkedIn"]) + "<br>" +
