@@ -26,8 +26,10 @@ let PASTA_CURRICULOS_ID = "";
 
 const MAX_MB = 8; // mesmo limite do formulário
 
-// Recebe um aviso por e-mail a cada candidatura nova. Deixe a lista vazia para não avisar ninguém.
-const AVISAR = ["leonardo.capella@v4company.com"];
+// Recebe o aviso de cada candidatura nova. Deixe a lista vazia para não avisar ninguém.
+const AVISAR = ["vinicius.mendes@v4company.com"];
+// Em cópia (Cc).
+const AVISAR_CC = ["ancila.ferreira@v4company.com"];
 
 /**
  * Nota automática de 0 a 10 do currículo, feita por IA lendo o PDF.
@@ -348,6 +350,7 @@ function avisar_(dados) {
   try {
     MailApp.sendEmail({
       to: AVISAR.join(","),
+      cc: (AVISAR_CC || []).join(","),
       subject: "Nova candidatura — " + (dados["Vaga"] || "vaga V4") +
                (dados["Nota IA"] !== undefined && dados["Nota IA"] !== ""
                  ? " — nota " + dados["Nota IA"] : ""),

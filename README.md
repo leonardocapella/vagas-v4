@@ -30,7 +30,10 @@ divulgar uma vaga só. Não mude o `id` depois de divulgar, senão o link antigo
 1. Crie uma planilha no Drive. Da URL
    `https://docs.google.com/spreadsheets/d/<ID>/edit`, copie o `<ID>`.
 2. Em `apps-script.gs`, cole em `PLANILHA_ID`.
-3. Em `AVISAR`, deixe os e-mails que recebem aviso de candidatura nova (lista vazia = não avisa).
+3. Quem recebe o aviso de candidatura nova já está configurado: `AVISAR` manda para o Vini
+   (`vinicius.mendes@v4company.com`) e `AVISAR_CC` põe a Ancila em cópia
+   (`ancila.ferreira@v4company.com`). Lista vazia = não avisa ninguém.
+   **O e-mail sai da conta que publicar o Apps Script** — o remetente será essa conta.
 4. Abra [script.google.com](https://script.google.com), projeto novo, cole o arquivo inteiro.
 5. Rode a função `configurar` uma vez e autorize o acesso.
 6. **Implantar > Nova implantação > App da Web**
